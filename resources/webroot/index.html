@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <script src="js/jquery-1.9.1.js"></script>
+        <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+
+
+        <!-- <script src="js/plugins.js"></script> -->
+        <script src="js/main.js"></script>
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <script>
+
+          // Set up category accordion
+          $(function() {
+            $( "#categories_container" )
+            .accordion({
+              heightStyle: "content",
+              header: "> div > h3"
+            })
+            .sortable({
+              axis: "y",
+              handle: "h3",
+              stop: function( event, ui ) {
+                // IE doesn't register the blur when sorting
+                // so trigger focusout handlers to remove .ui-state-focus
+                ui.item.children( "h3" ).triggerHandler( "focusout" );
+              }
+            });
+
+
+            // Hide error dialog
+            $('#error_dialog').hide();
+
+            // Hide note edit side
+            $(".note_edit").hide();
+            // $(".note_front").hide();
+
+          });
+        </script>
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+
+
+
+
+
+        <div id="main_container">
+
+          <div id="categories">
+            <div id="search">
+              <input type="text" id="search_box">
+            </div>
+
+            <div id="categories_container">
+
+              <!-- <div class="category_container"> -->
+              <!--   <h3 class="category_header">Category</h3> -->
+              <!--   <div> -->
+              <!--     <ul> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--     </ul> -->
+              <!--   </div> -->
+              <!-- </div> -->
+
+              <!-- <div class="category_container"> -->
+              <!--   <h3 class="category_header">Category2</h3> -->
+              <!--   <div> -->
+              <!--     <ul> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--     </ul> -->
+              <!--   </div> -->
+              <!-- </div> -->
+
+
+              <!-- <div class="category_container"> -->
+              <!--   <h3 class="category_header">Category2</h3> -->
+              <!--   <div> -->
+              <!--     <ul> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--       <li>Note Title</li> -->
+              <!--     </ul> -->
+              <!--   </div> -->
+              <!-- </div> -->
+
+
+            </div>
+          </div>
+
+          <div id="notes">
+
+          <div class="note">
+            <div class="note_front">
+              <div class="note_tools">
+                <a href="#" class="btn_delete_note"><img src='img/delete.png'/></a>
+                <a href="#" class="btn_edit_note"><img src='img/edit.png'/></a>
+                <a href="#" class="btn_close_note"><img src='img/close.png'/></a>
+              </div>
+              <h3>Note Title</h3>
+              <div class="note_body">
+                This is note content
+              </div>
+              <div class="note_categories">
+                <span class="note_category">cat1</span>
+                <span class="note_category">cat2</span>
+                <span class="note_category">cat3</span>
+              </div>
+              </div>
+            <div class="note_edit">
+              <input type="text" class="edit_note_title">
+              <textarea class="edit_note_body"></textarea>
+              <input type="text" class="edit_note_categories"/>
+              <button class="note_edit_button">Submit</button>
+              <button class="note_edit_button">Cancel</button>
+            </div>
+          </div>
+
+
+
+          <div class="note">
+            <div class="note_front">
+              <h3>Note Title</h3>
+              <div class="note_body">
+                This is note content
+              </div>
+              <div class="note_categories">
+                <span class="note_category">cat1</span>
+                <span class="note_category">cat2</span>
+                <span class="note_category">cat3</span>
+              </div>
+              </div>
+            <div class="note_edit">
+              <input type="text" class="edit_note_title">
+              <textarea class="edit_note_body"></textarea>
+              <input type="text" class="edit_note_categories"/>
+              <button class="note_edit_button">Submit</button>
+              <button class="note_edit_button">Cancel</button>
+            </div>
+          </div>
+
+
+            <div id="TEST">TEST:
+              <button id="test1">Load list</button>
+              </div>
+          </div>
+
+          <!-- Shown when ajax errors occur -->
+          <div id="error_dialog">
+            <h3>Error</h3>
+            <p>The server encountered an error, reporting:</p>
+            <pre id="error_dialog_msg"></pre>
+          </div>
+
+
+        </div>
+
+      </body>
+    </html>
+
