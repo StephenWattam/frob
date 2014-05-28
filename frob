@@ -1,7 +1,0 @@
-#!/usr/bin/rbx
-
-
-# Bundle
-require 'rubygems'
-require 'bundler/setup'
-
