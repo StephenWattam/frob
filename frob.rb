@@ -1,5 +1,8 @@
 #!/usr/bin/rbx
 
+CONFIG_FILE = './frob.yml'
+
+
 
 # Bundle
 require 'rubygems'
@@ -9,14 +12,39 @@ require 'bundler/setup'
 require 'sinatra/base'
 require 'sinatra/flash'
 require 'rack/ssl'
+require 'less'
+
+# Helpers
+require_relative './lib/helpers/formatting.rb'
+require_relative './lib/helpers/sanitise.rb'
+
+# Config
+require 'yaml'
+require 'digest/sha1' # pw hashing
+
+
+# =================================================================
+# Config
+#
+$conf = YAML.load(File.read(CONFIG_FILE))     or fail "Could not load main config"
+
+
+
+
+
+
+
+
+
+
 
 
 class Frob < Sinatra::Base
 
   # Session handling
   use Rack::Session::Cookie, 
-    :expire_after => 2592000, 
-    :secret => 'sTGfereFERha4he8akuresgh8kr3hy8ioz'
+    :expire_after => [$conf[:session_timeout].to_i, 60 * 5].min, 
+    :secret       => 'sTGfereFERha4he8akuresgh8kr3hy8ioz'
 
   # SSL
   use Rack::SSL
@@ -34,22 +62,71 @@ class Frob < Sinatra::Base
     disable :dump_errors
   end
 
+  # Allow LessCSS @import to work
+  Less.paths << settings.views
 
   # Use flash
   register Sinatra::Flash
 
+  # Custom helpers
+  helpers Formatting
+  helpers Sanitise
 
+  # =================================================================
+  # Use LESS for CSS
+  get '/css/:style.css' do
+    less "/css/#{params[:style]}".to_sym
+  end
 
+  
+  # =================================================================
   # TEST
   get '/' do
-    "STUFF"
+    auth!
+
+    erb :index
+  end
+
+  # Prompt for login
+  get '/login' do
+    erb :login
+  end
+
+  # Accept login
+  post '/login' do
+    # Hash in same way as generation tool 
+    hash = Digest::SHA1.hexdigest("#{$conf[:pass_salt]}#{params[:password].encode('utf-8')}")
+ 
+    # Check against config.
+    if hash == $conf[:pass_hash]
+      session[:authed] = true
+    else
+      flash[:fail] = 'Wrong password.'
+      redirect '/login'
+    end
+
+    redirect '/'
+  end
+
+  # Log out (get)
+  # GET is non-REST for this really
+  get '/logout' do
+    auth!
+    session[:authed] = false
+
+    flash[:success] = 'Logged out.'
+    redirect '/'
+  end
+
+  # =================================================================
+  # Auth helper
+  #
+
+  def auth!
+    redirect '/login' unless session[:authed]
   end
 
 end
-
-
-
-
 
 
 
