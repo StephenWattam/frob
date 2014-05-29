@@ -3,20 +3,5 @@
     <!-- Anchor for this card -->
     <a title="card-<%=@js_id%>"/>
 
-    <div class="card-banner">
-        <span class="fa fa-fw fa-<%= @id[-1] == '.' ? 'code' : 'credit-card'%>"></span>
-        <span class="title"><%=@id%></span>
-        <span class="card-actions">
-            <a href="#card-<%=@js_id%>" onclick="toggle_bookmark('<%=@id%>', $( '#bookmark-marker-<%=@js_id%>' ))">
-                <span id="bookmark-marker-<%=@js_id%>" 
-                    class="fa fa-fw fa-bookmark<%= !@bookmarked ? '-o' : ''%>"></span>
-            </a>
-            <span class="fa fa-fw fa-pencil"></span>
-            <span class="fa fa-fw fa-times"></span>
-        </span>
-    </div>
-
-    <% @card.each do |k, v| %>
-        <strong><%=h k%></strong>: <%=h v %><br/>
-    <% end %>
+    <%= yield %>
 </section>

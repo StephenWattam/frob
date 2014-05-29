@@ -1,0 +1,22 @@
+<div class="card-banner">
+    <span class="fa fa-fw fa-pencil"></span>
+    <span class="title"><%=@id%></span>
+    <span class="card-actions">
+        <a title="Bookmark" href="#card-<%=@js_id%>" onclick="toggle_bookmark('<%=@id%>' )">
+            <span class="bookmark-marker-<%=@js_id%> fa fa-fw fa-bookmark<%= !@bookmarked ? '-o' : ''%>"></span>
+        </a>
+
+        <a title="Discard" href="#card-<%=@js_id%>" onclick="discard_edits('<%=@id%>' )">
+            <span class="fa fa-fw fa-times"></span>
+        </a>
+        <a title="Save" href="#card-<%=@js_id%>" onclick="save_edits('<%=@id%>' )">
+            <span class="fa fa-fw fa-check"></span>
+        </a>
+    </span>
+</div>
+
+
+
+
+
+EDIT.

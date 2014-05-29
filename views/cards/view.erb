@@ -1,0 +1,25 @@
+
+<div class="card-banner">
+    <span class="fa fa-fw fa-<%= @id[-1] == '.' ? 'code' : 'credit-card'%>"></span>
+    <span class="title"><%=@id%></span>
+    <span class="card-actions">
+        <a title="Bookmark" href="#card-<%=@js_id%>" onclick="toggle_bookmark('<%=@id%>' )">
+            <span class="bookmark-marker-<%=@js_id%> fa fa-fw fa-bookmark<%= !@bookmarked ? '-o' : ''%>"></span>
+        </a>
+
+        <a title="Edit" href="#card-<%=@js_id%>" onclick="edit_card('<%=@id%>' )">
+            <span class="fa fa-fw fa-pencil"></span>
+        </a>
+        <a title="Delete" href="#card-<%=@js_id%>" onclick="delete_card('<%=@id%>' )">
+            <span class="fa fa-fw fa-trash-o"></span>
+        </a>
+        <a title="Hide" href="#card-<%=@js_id%>" onclick="hide_card('<%=@id%>')">
+            <span class="fa fa-fw fa-times"></span>
+        </a>
+    </span>
+</div>
+
+<% @card.each do |k, v| %>
+    <strong><%=h k%></strong>: <%=h v %><br/>
+<% end %>
+

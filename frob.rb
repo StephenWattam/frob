@@ -158,14 +158,19 @@ class Frob < Sinatra::Base
   get '/get/:id' do
     auth!
 
-    @id = $store.sanitise_id(params[:id])
-    @js_id = @id.gsub('.', '_') # JS safe ID
-    @card = $store[@id]
-    @bookmarked = ( session[:bookmarks] || [] ).include?(@id)
-
+    load_card(params[:id])
     # TODO: if request.xhr render partial, else render with layout.
 
-    erb :card, :layout => nil
+    erb :'cards/view', :layout => :card 
+  end
+
+  # Get a partial for editing a card
+  get '/edit/:id' do
+    auth!
+
+    load_card(params[:id])
+
+    erb :'cards/edit', :layout => :card
   end
 
   # Return bookmark list
@@ -196,6 +201,22 @@ class Frob < Sinatra::Base
 
   def auth!
     redirect '/login' unless session[:authed]
+  end
+  
+  # =================================================================
+  # JS ID helper
+  #
+
+  # Load card for rendering using the :card layout
+  def load_card(id)
+    @id = $store.sanitise_id(id)
+    @js_id = js_id(id)
+    @card = $store[@id]
+    @bookmarked = ( session[:bookmarks] || [] ).include?(@id)
+  end
+
+  def js_id(id)
+    id.to_s.gsub('.', '_')
   end
 
 end

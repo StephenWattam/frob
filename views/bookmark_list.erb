@@ -1,5 +1,10 @@
 <ul>
     <% (session[:bookmarks] || []).each do |id| %>
-        <li><a href="#" onclick="fetch_card('<%=h id %>');"><%=h id %></a></li>
+        <li>
+            <a title="Bookmark" href="#card-<%=js_id(id)%>" onclick="toggle_bookmark('<%=id%>' )">
+                <span class="bookmark-marker-<%=js_id(id)%> fa fa-fw fa-bookmark"></span>
+            </a>
+            <a href="#" onclick="fetch_card('<%=h id %>');"><%=h id %></a>
+        </li>
     <% end %>
 </ul>
