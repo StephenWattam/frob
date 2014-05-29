@@ -1,11 +1,12 @@
 
-
+@base: rgb(89, 104, 87);
 
 aside {
 
     width: 200px;
-    background: rgb(89, 104, 87);
+    background: @base;
     position: fixed;
+    top: 0;
     overflow-y: auto;
     overflow-x: hidden;
     height: 100%;
@@ -15,11 +16,42 @@ aside {
         width: 190px;
         padding: 2px 5px;
         font-weight: bold;
+        border: none;
+        margin: 0;
+    }
+}
+
+div#global-actions {
+    text-align: center;
+    padding: 5px;
+
+    a .fa {
+        color: white;
     }
 }
 
 div#content {
     
-    margin-left: 230px;
+    margin-left: 200px;
 
+}
+
+
+
+.card {
+    border: solid 1px @base;
+    border-radius: 4px;
+    margin: 20px;
+    
+    .card-banner {
+        border-bottom: solid @base 1px;
+        font-weight: bold;
+        font-size: larger;
+        padding: 3px;
+
+        .card-actions {
+            float: right;
+            text-align: right;
+        }
+    }
 }

@@ -1,0 +1,30 @@
+
+
+form {
+    display: block;
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+
+button {
+    background: none;
+    border: none;
+}
+
+input[type='password'] {
+    border: none;
+    border-bottom: dotted 1px black;
+}
+
+span#key {
+    display: block;
+    width: 100%;
+    font-size: 100px;
+    line-height: 150px;
+    text-align: center;
+}

@@ -94,7 +94,7 @@ class Frob < Sinatra::Base
 
   # Prompt for login
   get '/login' do
-    erb :login
+    erb :login, :layout => nil
   end
 
   # Accept login
@@ -145,16 +145,49 @@ class Frob < Sinatra::Base
     return ([sanitised_input] + results).to_json
   end
 
+  # Rebuild internal index manually.
+  get '/rebuild-index' do
+    auth!
+
+    $store.rebuild_index
+
+    redirect '/'
+  end
+
   # AJAX partial rendering thing
   get '/get/:id' do
     auth!
 
     @id = $store.sanitise_id(params[:id])
+    @js_id = @id.gsub('.', '_') # JS safe ID
     @card = $store[@id]
+    @bookmarked = ( session[:bookmarks] || [] ).include?(@id)
 
     # TODO: if request.xhr render partial, else render with layout.
 
     erb :card, :layout => nil
+  end
+
+  # Return bookmark list
+  get '/bookmarks' do 
+    auth!
+    erb :bookmark_list, :layout => nil
+  end
+
+  # Add a bookmark
+  get '/toggle-bookmark/:id' do
+    auth!
+
+    id = $store.sanitise_id(params[:id])
+    session[:bookmarks] ||= []
+
+    if session[:bookmarks].include?(id)
+      session[:bookmarks].delete(id)
+    else
+      session[:bookmarks] << id
+    end
+    
+    return id
   end
 
   # =================================================================

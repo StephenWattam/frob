@@ -207,6 +207,24 @@ class CardStore
     @index.keys
   end
 
+  # Return list of children of this id's parent
+  def siblings(id)
+    children(parent(id))
+  end
+
+  # Return list of this card's children
+  def children(id)
+    id = sanitise_id(id)
+    find_prefix("#{id}#{SEPARATOR}")
+  end
+
+  # Return the ID 'up one'
+  # May return ''
+  def parent(id)
+    id = sanitise_id(id)
+    return chunk(id)[0..-2].join(SEPARATOR)
+  end
+
 private
   
   # Load from YAMl file on disk

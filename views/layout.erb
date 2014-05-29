@@ -13,8 +13,10 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <link rel="stylesheet" href="/css/normalize.css">
+        <link rel="stylesheet" href="/css/fontawesome.css">
         <link rel="stylesheet" href="/css/jquery-ui-1.10.4.custom.css">
         <link rel="stylesheet" href="/css/site.css">
+        <link rel="stylesheet" href="/css/flash.css">
         <!-- todo: print styles -->
 
         <script src="/js/modernizr-2.6.2.min.js"></script>
@@ -27,16 +29,27 @@
         <![endif]-->
 
         <aside>
+
+            <div id="global-actions">
+                <a href="/rebuild-index" title="re-index"><span class="fa fa-fw fa-refresh"></span></a>
+                <a href="/logout" title="log out"><span class="fa fa-fw fa-lock"></span></a>
+            </div>
+
             <div class="ui-widget">
-              <input id="search">
+                <input id="search">
+            </div>
+
+            <div id="bookmarks">
+                <%= erb :bookmark_list, :layout => nil %>
             </div>
         </aside>
 
-        <div id="content">
-            <% flash.each do |k, v| %>
-                <section class="flash <%=h k %>"><%=h v %></section>
-            <% end %> 
+        <!-- Flash -->
+        <% flash.each do |k, v| %>
+            <section class="flash <%=h k %>"><%=h v %></section>
+        <% end %> 
 
+        <div id="content">
             <!-- content -->
             <article>
                 <%= yield %>

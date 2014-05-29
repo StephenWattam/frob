@@ -1,6 +1,49 @@
-LOGIN
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Frob</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<form action="/login" method="post">
-    Password: <input type="password" name="password"/>
-              <input type="submit">
-</form>
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+
+        <link rel="stylesheet" href="/css/fontawesome.css">
+        <link rel="stylesheet" href="/css/flash.css">
+        <link rel="stylesheet" href="/css/login.css">
+
+        <!-- Used to focus the login box. -->
+        <script src="/js/jquery-1.10.2.min.js"></script>
+
+    </head>
+    <body>
+
+        <!-- Flash -->
+        <% flash.each do |k, v| %>
+            <section class="flash <%=h k %>"><%=h v %></section>
+        <% end %> 
+
+        <div id="content">
+
+            <!-- Login form -->
+            <form action="/login" method="post">
+                <span id="key" class="fa fa-fw fa-key"></span>
+
+                <input type="password" name="password" id="password"/>
+                <button type="submit">
+                    <span class="fa fa-fw fa-arrow-circle-o-right fa-border"></span>
+                </button>
+            </form>
+
+            <!-- Focus the login box on load -->
+            <script type="text/javascript" language="javascript">
+                $(function() {
+                  $("#password").focus();
+                });
+            </script>
+        </div>
+
+    </body>
+</html>

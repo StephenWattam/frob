@@ -191,13 +191,13 @@
 	top: 0;
 	left: 0;
 	cursor: default;
-    padding: 0;
-    padding-top: 10px;
+    padding: 10px 0;
     width: 200px;
     color: white;
+    background: white;
 }
 .ui-autocomplete-loading {
-    color: green;
+    background: #ddd;
 }
 .ui-button {
 	display: inline-block;
@@ -559,14 +559,16 @@ button.ui-button::-moz-focus-inner {
 	padding: 2px 5px;
 	line-height: 1.5;
 	min-height: 0; /* support: IE7 */
-	font-weight: normal;
+    font-weight: bold;
+    color: black;
 }
 .ui-menu .ui-menu-item a.ui-state-focus,
 .ui-menu .ui-menu-item a.ui-state-active {
 	font-weight: normal;
 	/* margin: -1px; */
-    background: rgba(255,255,255,0.8);
-    color: black;
+    background: rgb(89, 104, 87);
+    color: white;
+    font-weight: bold;
 }
 
 .ui-menu .ui-state-disabled {
