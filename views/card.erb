@@ -1,0 +1,9 @@
+<section class="card" id="<%=@id%>">
+    <span class="title"><%=@id%></span>
+        (edit) (delete)
+    <hr/>
+    <% @card.each do |k, v| %>
+        <%=h k%> : <%=h v %><br/>
+    <% end %>
+
+</section>

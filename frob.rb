@@ -15,19 +15,24 @@ require 'rack/ssl'
 require 'less'
 
 # Helpers
-require_relative './lib/helpers/formatting.rb'
-require_relative './lib/helpers/sanitise.rb'
+require_relative './lib/helpers/formatting'
+require_relative './lib/helpers/sanitise'
 
 # Config
 require 'yaml'
 require 'digest/sha1' # pw hashing
 
+# Storage layer
+require_relative './lib/card_store'
+
+# AJAX API
+require 'json'
 
 # =================================================================
 # Config
 #
-$conf = YAML.load(File.read(CONFIG_FILE))     or fail "Could not load main config"
-
+$conf  = YAML.load(File.read(CONFIG_FILE))     or fail "Could not load main config"
+$store = CardStore.new($conf[:store_dir])
 
 
 
@@ -116,6 +121,40 @@ class Frob < Sinatra::Base
 
     flash[:success] = 'Logged out.'
     redirect '/'
+  end
+
+
+  # =================================================================
+  # AJAX Interaction
+  #
+  
+  # JSON search API
+  get '/search' do
+    auth!
+
+    # Read search term
+    term = params[:term].to_s
+
+    # Sanitise and offer as 'new' ID
+    sanitised_input = $store.sanitise_id(term)
+    return [].to_json if sanitised_input.length == 0
+
+    # search using regexp
+    results = $store.find(params[:term])
+
+    return ([sanitised_input] + results).to_json
+  end
+
+  # AJAX partial rendering thing
+  get '/get/:id' do
+    auth!
+
+    @id = $store.sanitise_id(params[:id])
+    @card = $store[@id]
+
+    # TODO: if request.xhr render partial, else render with layout.
+
+    erb :card, :layout => nil
   end
 
   # =================================================================
