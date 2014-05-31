@@ -16,7 +16,18 @@
 </div>
 
 
+<div id="card-fields-<%=@js_id%>">
+</div>
 
+<div class="card-add-field">
+    <a href="#card-<%=@js_id%>" onclick="add_field('<%=@id%>');">
+        <span class="fa fa-fw fa-plus"></span>
+    </a>
+</div>
 
-
-EDIT.
+<!-- Populate with content -->
+<script type="text/javascript" language="javascript">
+<% @card.each do |k, v| %>
+    add_field('<%=@js_id%>', '<%=q k%>', '<%=q v%>');
+<% end %>
+</script>

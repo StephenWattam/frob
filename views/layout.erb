@@ -22,6 +22,7 @@
         <script src="/js/modernizr-2.6.2.min.js"></script>
         <script src="/js/jquery-1.10.2.min.js"></script>
         <script src="/js/jquery-ui-1.10.4.custom.min.js"></script>
+        <script src="/js/nano.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -31,7 +32,7 @@
         <aside>
 
             <div id="global-actions">
-                <a href="/rebuild-index" title="re-index"><span class="fa fa-fw fa-refresh"></span></a>
+                <a href="#" onclick="rebuild-index();" title="re-index"><span class="fa fa-fw fa-refresh"></span></a>
                 <a href="/logout" title="log out"><span class="fa fa-fw fa-lock"></span></a>
             </div>
 
@@ -55,6 +56,26 @@
                 <%= yield %>
             </article>
         </div>
+
+
+
+
+
+
+
+
+        <!-- Each field in the edit pane -->
+        <script id="editFieldTemplate" type="text/x-nano">
+            <div class="card-field card-field-{js_id}" id="card-field-id-{rand}">
+                <input class="field-key" type="text" value="{key}"/>
+                <textarea class="field-value">{value}</textarea>
+                <a href="#card-{js_id}" onclick="remove_field('card-field-id-{rand}');">
+                    <span class="fa fa-fw fa-times"></span>
+                </a>
+            </div>
+        </script>
+
+
 
 
         <script src="/js/main.js"></script>

@@ -1,18 +1,18 @@
 
 /* Handle drop-down search box. */
 $(function() {
-  var cache = {};
+  // var cache = {};
   $( "#search" ).autocomplete({
-    minLength: 2,
+    minLength: 1,
     source: function( request, response ) {
         var term = request.term;
-        if ( term in cache ) {
-          response( cache[ term ] );
-          return;
-        }
+        // if ( term in cache ) {
+        //   response( cache[ term ] );
+        //   return;
+        // }
 
         $.getJSON( "/search", request, function( data, status, xhr ) {
-          cache[ term ] = data;
+          // cache[ term ] = data;
           response( data );
         });
       },
@@ -24,7 +24,12 @@ $(function() {
     });
 });
 
-
+/* Rebuild the internal index */
+function rebuild_index() {
+  $.get( "/rebuild-index/", function( data ) {
+    // Success if data == true
+  });
+}
 
 /* Manage search query to fetch a card */
 function fetch_card(id) {
@@ -53,7 +58,12 @@ function delete_card(id) {
     
   if (confirm("Delete card " + id + "?")){
     $.get( "/delete/" + id, function( data ) {
-      hide_card(id);  
+
+      // The service echoes the ID it has bookmarked,
+      // so check this.
+      if (data == id){
+        hide_card(id);
+      }
     });
   }
 }
@@ -66,6 +76,59 @@ function discard_edits(id) {
     fetch_card(id);
   }
 }
+
+/* Save Edits */
+function save_edits(id) {
+  // Collect together data from the edit container
+  var el_fields = $( "#card-fields-" + js_id(id) ).children( ".card-field" );
+  var fields    = {};
+
+  el_fields.each( function( i, field ){
+
+    var key = $(field).children( ".field-key" )[0];
+    var value = $(field).children( ".field-value")[0];
+
+    // Load value from elements if they are found
+    if (typeof key != "undefined" )
+      key = $(key).val();
+    if (typeof value != "undefined" )
+      value = $(value).val();
+
+    // If the key exists, pop it in the data hash
+    if (typeof key != "undefined" && key != "")
+      fields[key] = value;
+  });
+
+
+  // POST and then un-edit
+  $.post( "/edit/" + id, { fields: fields }, function( data ) {
+    if(data == id){
+      hide_card(id);
+      fetch_card(id);
+    }
+  })
+}
+
+
+
+/* Add a field to a card's editable thing 
+ * key and value are optional!
+ * */
+function add_field(id, key, value) {
+  
+  var uuid = ('' + Math.random()).replace(/\./g, '');
+
+  $( "#card-fields-" + js_id(id) ).append(
+    nano( $( "#editFieldTemplate" ).html(), {js_id: js_id(id), rand: uuid, key: key, value: value} )
+  );
+}
+
+/* Remove a field from the edit pane */
+function remove_field(elid) {
+  $( "#" + elid ).detach();
+}
+
+
 
 
 /* Load the bookmark partial down the LHS */

@@ -151,7 +151,7 @@ class Frob < Sinatra::Base
 
     $store.rebuild_index
 
-    redirect '/'
+    return 'true'
   end
 
   # AJAX partial rendering thing
@@ -161,6 +161,7 @@ class Frob < Sinatra::Base
     load_card(params[:id])
     # TODO: if request.xhr render partial, else render with layout.
 
+    cache_control "No-Cache"
     erb :'cards/view', :layout => :card 
   end
 
@@ -171,6 +172,31 @@ class Frob < Sinatra::Base
     load_card(params[:id])
 
     erb :'cards/edit', :layout => :card
+  end
+
+  # Post to save
+  post '/edit/:id' do
+    auth!
+    id = $store.sanitise_id(params[:id])
+
+    # Parse hash
+    hash = params[:fields] || {}
+    return '' unless hash.is_a?(Hash)
+
+    # Write to store
+    $store.put(id, hash);
+
+    return id
+  end
+
+  # Delete a card permanently
+  get '/delete/:id' do
+    auth!
+
+    id = $store.sanitise_id(params[:id])
+    $store.delete(id)
+
+    return id
   end
 
   # Return bookmark list

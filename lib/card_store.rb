@@ -24,7 +24,6 @@ class CardStore
     @data_dir = data_dir
 
     # Keep an index cache
-    @index = {}
     rebuild_index
   end
 
@@ -36,11 +35,14 @@ class CardStore
   # Rebuild the cache used for
   # title searches
   def rebuild_index
-    files = Dir.glob(File.join(@data_dir, "*.#{EXTENSION}"))
-    files.delete_if { |f| File.directory?(f) || !File.readable?(f) }
-    files.each do |f|
-      id         = sanitise_id(File.basename(f, ".#{EXTENSION}"))
-      @index[id] = list_files(id)
+    self.synchronize do
+      @index = {}
+      files = Dir.glob(File.join(@data_dir, "*.#{EXTENSION}"))
+      files.delete_if { |f| File.directory?(f) || !File.readable?(f) }
+      files.each do |f|
+        id         = sanitise_id(File.basename(f, ".#{EXTENSION}"))
+        @index[id] = list_files(id)
+      end
     end
   end
 
@@ -140,7 +142,7 @@ class CardStore
     value.delete_if { |k, v| !v.is_a?(String) }
 
     # and write
-    write_yaml(id, hash)
+    write_yaml(id, value)
   end
   alias_method :'[]=', :update
   alias_method :put,   :update
@@ -239,12 +241,16 @@ private
   end
 
   # Write a hash object to disk.
-  def write_yaml(id, hash)
+  def write_yaml(id, value)
     self.synchronize do
       filename = card_filename(id)
+
       File.open(filename, 'w') do |io_out|
-        YAML.dump(hash, io_out)
+        YAML.dump(value, io_out)
       end
+    
+      # Maintain index
+      @index[id] = []
     end
   end
 

@@ -19,7 +19,9 @@
     </span>
 </div>
 
-<% @card.each do |k, v| %>
-    <strong><%=h k%></strong>: <%=h v %><br/>
-<% end %>
+<div class="fields">
+    <% @card.each do |k, v| %>
+        <strong><%=h k%></strong>: <%=h v %><br/>
+    <% end %>
+</div>
 

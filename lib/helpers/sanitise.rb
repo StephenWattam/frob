@@ -24,4 +24,9 @@ module Sanitise
     Rack::Utils.unescape(text.to_s)
   end
 
+  # Quote escaping for JS
+  def q(text)
+    text.to_s.gsub("'", "\'");
+  end
+
 end
