@@ -12,6 +12,9 @@
         <a title="Save" href="#card-<%=@js_id%>" onclick="save_edits('<%=@id%>' )">
             <span class="fa fa-fw fa-check"></span>
         </a>
+        <a title="Hide" href="#card-<%=@js_id%>" onclick="hide_card('<%=@id%>')">
+            <span class="fa fa-fw fa-minus-square"></span>
+        </a>
     </span>
 </div>
 
@@ -27,7 +30,9 @@
 
 <!-- Populate with content -->
 <script type="text/javascript" language="javascript">
-<% @card.each do |k, v| %>
-    add_field('<%=@js_id%>', '<%=q k%>', '<%=q v%>');
-<% end %>
+    <% @card.each do |k, v| %>
+        add_field('<%=@js_id%>', '<%=q k%>', '<%=q v%>');
+    <% end %>
+    // Spare field at the bottom
+    add_field('<%=@js_id%>');
 </script>

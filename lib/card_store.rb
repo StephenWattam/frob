@@ -62,10 +62,11 @@ class CardStore
   end
 
   # Does an ID exist (raw, not a prefix or rx search)
-  def exists?(id)
+  def exist?(id)
     id = sanitise_id(id)
     @index.include?(id)
   end
+  alias_method :exists?, :exist?
 
   # Ensure an ID is valid, and return a valid form
   # if so

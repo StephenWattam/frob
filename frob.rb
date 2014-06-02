@@ -158,7 +158,10 @@ class Frob < Sinatra::Base
   get '/get/:id' do
     auth!
 
-    load_card(params[:id])
+    id = $store.sanitise_id(params[:id])
+    redirect "/edit/#{id}" unless $store.exist?(id)
+
+    load_card(id)
     # TODO: if request.xhr render partial, else render with layout.
 
     cache_control "No-Cache"

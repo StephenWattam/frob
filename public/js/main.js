@@ -121,6 +121,9 @@ function add_field(id, key, value) {
   $( "#card-fields-" + js_id(id) ).append(
     nano( $( "#editFieldTemplate" ).html(), {js_id: js_id(id), rand: uuid, key: key, value: value} )
   );
+
+  // Focus the new key
+  $( "#card-field-id-" + uuid + " .field-key" ).focus();
 }
 
 /* Remove a field from the edit pane */
