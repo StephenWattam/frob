@@ -32,7 +32,7 @@
         <aside>
 
             <div id="global-actions">
-                <a href="#" onclick="rebuild-index();" title="re-index"><span class="fa fa-fw fa-refresh"></span></a>
+                <a href="#" onclick="rebuild_index();" title="re-index"><span class="fa fa-fw fa-refresh"></span></a>
                 <a href="/logout" title="log out"><span class="fa fa-fw fa-lock"></span></a>
             </div>
 
@@ -56,6 +56,54 @@
                 <%= yield %>
             </article>
         </div>
+
+
+
+
+
+        <!-- Card frame (same for edit and get ) -->
+        <script id="cardFrameTemplate" type="text/x-nano">
+            <section class="card" id="card-{js_id}">
+                <!-- Anchor for this card -->
+                <a title="card-{js_id}"/>
+
+                <!-- Place where other template content goes -->
+                <div class="card-content" id="card-content-{js_id}">
+                </div>
+                
+            </section>
+        </script>
+        
+
+        <!-- Card view content -->
+        <script id="cardViewTemplate" type="text/x-nano">
+            <div class="card-banner">
+                <span class="fa fa-fw fa-{type_icon}"></span>
+                <span class="title">{id}</span>
+                <span class="card-actions">
+                <a title="Bookmark" href="#card-{js_id}" onclick="toggle_bookmark('{id}' )">
+                <span class="bookmark-marker-{js_id} fa fa-fw {bookmark_icon}"></span>
+                    </a>
+
+                    <a title="Edit" href="#card-{js_id}" onclick="edit_card('{id}' )">
+                        <span class="fa fa-fw fa-pencil"></span>
+                    </a>
+                    <a title="Delete" href="#card-{js_id}" onclick="delete_card('{id}' )">
+                        <span class="fa fa-fw fa-trash-o"></span>
+                    </a>
+                    <a title="Hide" href="#card-{js_id}" onclick="hide_card('{id}')">
+                        <span class="fa fa-fw fa-minus-square"></span>
+                    </a>
+                </span>
+            </div>
+
+            <!-- fields go in here from other templates -->
+            <div class="fields">
+            </div>
+
+        </script>
+
+
 
 
 

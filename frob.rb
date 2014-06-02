@@ -142,16 +142,18 @@ class Frob < Sinatra::Base
     # search using regexp
     results = $store.find(params[:term])
 
-    return ([sanitised_input] + results).to_json
+    json_return([sanitised_input] + results)
   end
 
   # Rebuild internal index manually.
-  get '/rebuild-index' do
+  post '/rebuild-index' do
     auth!
 
+    # TODO: handle failure.
     $store.rebuild_index
 
-    return 'true'
+
+    json_return('Index rebuilt')
   end
 
   # AJAX partial rendering thing
@@ -164,17 +166,7 @@ class Frob < Sinatra::Base
     load_card(id)
     # TODO: if request.xhr render partial, else render with layout.
 
-    cache_control "No-Cache"
-    erb :'cards/view', :layout => :card 
-  end
-
-  # Get a partial for editing a card
-  get '/edit/:id' do
-    auth!
-
-    load_card(params[:id])
-
-    erb :'cards/edit', :layout => :card
+    json_return({:card => @card, :bookmarked => @bookmarked, :id => @id, :is_template => @is_template})
   end
 
   # Post to save
@@ -189,27 +181,28 @@ class Frob < Sinatra::Base
     # Write to store
     $store.put(id, hash);
 
-    return id
+    json_return(id)
   end
 
   # Delete a card permanently
-  get '/delete/:id' do
+  post '/delete/:id' do
     auth!
 
     id = $store.sanitise_id(params[:id])
     $store.delete(id)
 
-    return id
+    json_return(id)
   end
 
   # Return bookmark list
   get '/bookmarks' do 
     auth!
-    erb :bookmark_list, :layout => nil
+
+    json_return(session[:bookmarks] || [])
   end
 
   # Add a bookmark
-  get '/toggle-bookmark/:id' do
+  post '/toggle-bookmark/:id' do
     auth!
 
     id = $store.sanitise_id(params[:id])
@@ -220,9 +213,20 @@ class Frob < Sinatra::Base
     else
       session[:bookmarks] << id
     end
-    
-    return id
+   
+    json_return(id)
   end
+  
+  # =================================================================
+  # JSON return handler
+  #
+
+  # Return a standard-format JSON return
+  def json_return(payload = nil, success = true)
+    cache_control 'No-Cache'
+    return {:success => !!success, :value => payload}.to_json
+  end
+
 
   # =================================================================
   # Auth helper
@@ -238,14 +242,10 @@ class Frob < Sinatra::Base
 
   # Load card for rendering using the :card layout
   def load_card(id)
-    @id = $store.sanitise_id(id)
-    @js_id = js_id(id)
-    @card = $store[@id]
-    @bookmarked = ( session[:bookmarks] || [] ).include?(@id)
-  end
-
-  def js_id(id)
-    id.to_s.gsub('.', '_')
+    @id          = $store.sanitise_id(id)
+    @card        = $store[@id]
+    @bookmarked  = ( session[:bookmarks] || [] ).include?(@id)
+    @is_template = @id.to_s[-1] == $store.SEPARATOR
   end
 
 end

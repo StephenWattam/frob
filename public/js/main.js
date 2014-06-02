@@ -1,19 +1,14 @@
 
 /* Handle drop-down search box. */
 $(function() {
-  // var cache = {};
   $( "#search" ).autocomplete({
     minLength: 1,
     source: function( request, response ) {
         var term = request.term;
-        // if ( term in cache ) {
-        //   response( cache[ term ] );
-        //   return;
-        // }
 
         $.getJSON( "/search", request, function( data, status, xhr ) {
-          // cache[ term ] = data;
-          response( data );
+          // TODO: test data['success'] == true
+          response( data['value'] );
         });
       },
     select: function( event, ui ) {
@@ -24,26 +19,104 @@ $(function() {
     });
 });
 
+
+// Make a get request, handling the UI and server API
+function get(endpoint, callback){
+
+  // TODO: show activity icon
+
+  $.get( endpoint, function( data ) {
+
+    // TODO: hide activity icon
+    data = JSON.parse(data);
+    // TODO: test data['success'] == true and error if not
+  
+    callback(data['value']);
+  });
+
+  // TODO: add failure handler that displays an error message
+}
+
+// Make a POST request, handling the UI and server API 
+// (success/failure)
+function post(endpoint, callback, payload){
+  
+  if (typeof payload == 'undefined')
+    payload = {};
+
+  // TODO: show activity icon
+
+  // POST and then un-edit
+  $.post( endpoint, payload, function( data ) {
+    
+    // TODO: hide activity icon
+    data = JSON.parse(data);
+    // TODO: test data['success'] == true, error if not
+
+    callback(data["value"]);
+  });
+
+  // TODO: add failure handler that displays an error message
+}
+
+
 /* Rebuild the internal index */
-function rebuild_index() {
-  $.get( "/rebuild-index/", function( data ) {
-    // Success if data == true
+function rebuild_index(){
+  post('/rebuild-index', function(msg){
+    alert('' + msg);
   });
 }
+
+
 
 /* Manage search query to fetch a card */
 function fetch_card(id) {
 
+  get('/get/' + id, function(response){
+
+    // Compute JS ID
+    var js_id = to_js_id(response['id']);
+
+    // Add the JS id field
+    response['js_id'] = js_id
+    // Add the icon type depending on the template state
+    response['type_icon'] = response['is_template'] ? 'code' : 'credit-card';
+    response['bookmark_icon'] = response['bookmarked'] ? 'fa-bookmark': 'fa-bookmark-o';
+
+    // Render the card frame
+    var card_frame = nano($( "#cardFrameTemplate" ).html(), response )
+    $( "#content" ).prepend( card_frame );
+
+    // And the card content
+    var card_content = nano($( "#cardViewTemplate" ).html(), response )
+    $( "#card-" + js_id + " .card-content" ).html( card_content );
+
+    // TODO: render fields
+  });
   $.get( "/get/" + id, function( data ) {
     hide_card(id);
-    $( "#content" ).prepend( data );
   });
 }
 
+
+
+
+
+
 /* Hide a card from the display */
 function hide_card(id) {
-  $( "#card-" + js_id( id ) ).detach();
+  $( "#card-" + to_js_id( id ) ).detach();
 }
+
+/* Sanitise an ID to avoid having dots in. */
+function to_js_id(id) {
+  return ('' + id).replace(/\./g, '_');
+}
+
+// -------------------------------
+
+
+
 
 /* Load the edit partial for a card */
 function edit_card(id) {
@@ -170,7 +243,3 @@ function toggle_bookmark(id){
 }
 
 
-/* Sanitise an ID to avoid having dots in. */
-function js_id(id) {
-  return ('' + id).replace(/\./g, '_');
-}
