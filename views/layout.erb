@@ -22,7 +22,7 @@
         <script src="/js/modernizr-2.6.2.min.js"></script>
         <script src="/js/jquery-1.10.2.min.js"></script>
         <script src="/js/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="/js/nano.js"></script>
+        <script src="/js/handlebars-v1.3.0.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -32,6 +32,7 @@
         <aside>
 
             <div id="global-actions">
+                <a href="#" onclick="clear_all();" title="Clear"><span class="fa fa-fw fa-minus-square"></span></a>
                 <a href="#" onclick="rebuild_index();" title="re-index"><span class="fa fa-fw fa-refresh"></span></a>
                 <a href="/logout" title="log out"><span class="fa fa-fw fa-lock"></span></a>
             </div>
@@ -41,7 +42,6 @@
             </div>
 
             <div id="bookmarks">
-                <%= erb :bookmark_list, :layout => nil %>
             </div>
         </aside>
 
@@ -62,13 +62,13 @@
 
 
         <!-- Card frame (same for edit and get ) -->
-        <script id="cardFrameTemplate" type="text/x-nano">
-            <section class="card" id="card-{js_id}">
+        <script id="cardFrameTemplate" type="text/x-handlebars-template">
+            <section class="card" id="card-{{js_id}}">
                 <!-- Anchor for this card -->
-                <a title="card-{js_id}"/>
+                <a title="card-{{js_id}}"/>
 
                 <!-- Place where other template content goes -->
-                <div class="card-content" id="card-content-{js_id}">
+                <div class="card-content" id="card-content-{{js_id}}">
                 </div>
                 
             </section>
@@ -76,22 +76,22 @@
         
 
         <!-- Card view content -->
-        <script id="cardViewTemplate" type="text/x-nano">
+        <script id="cardViewTemplate" type="text/x-handlebars-template">
             <div class="card-banner">
-                <span class="fa fa-fw fa-{type_icon}"></span>
-                <span class="title">{id}</span>
+                <span class="fa fa-fw fa-{{type_icon}}"></span>
+                <span class="title">{{id}}</span>
                 <span class="card-actions">
-                <a title="Bookmark" href="#card-{js_id}" onclick="toggle_bookmark('{id}' )">
-                <span class="bookmark-marker-{js_id} fa fa-fw {bookmark_icon}"></span>
+                <a title="Bookmark" href="#card-{{js_id}}" onclick="toggle_bookmark('{{id}}' )">
+                <span class="bookmark-marker-{{js_id}} fa fa-fw fa-bookmark{{#unless bookmarked}}-o{{/unless}}"></span>
                     </a>
 
-                    <a title="Edit" href="#card-{js_id}" onclick="edit_card('{id}' )">
+                    <a title="Edit" href="#card-{{js_id}}" onclick="edit_card('{{id}}' )">
                         <span class="fa fa-fw fa-pencil"></span>
                     </a>
-                    <a title="Delete" href="#card-{js_id}" onclick="delete_card('{id}' )">
+                    <a title="Delete" href="#card-{{js_id}}" onclick="delete_card('{{id}}' )">
                         <span class="fa fa-fw fa-trash-o"></span>
                     </a>
-                    <a title="Hide" href="#card-{js_id}" onclick="hide_card('{id}')">
+                    <a title="Hide" href="#card-{{js_id}}" onclick="hide_card('{{id}}')">
                         <span class="fa fa-fw fa-minus-square"></span>
                     </a>
                 </span>
@@ -99,26 +99,46 @@
 
             <!-- fields go in here from other templates -->
             <div class="fields">
+                {{#each card}}
+                    <div class="field">
+                        <span class="key">{{{@key}}}</span>: {{{this}}}
+                    </div>
+                {{/each}}
             </div>
 
         </script>
 
 
 
+        <!-- Card contents when editing -->
+        <script id="cardEditTemplate" type="text/x-handlebars-template">
+            <div class="card-banner">
+                <span class="fa fa-fw fa-pencil"></span>
+                <span class="title">{{{id}}}</span>
+                <span class="card-actions">
+                    <a title="Bookmark" href="#card-{{js_id}}" onclick="toggle_bookmark('{{id}}' )">
+                        <span class="bookmark-marker-{{js_id}} fa fa-fw fa-bookmark{{#unless bookmarked}}-o{{/unless}}"></span>
+                    </a>
+
+                    <a title="Discard" href="#card-{{js_id}}" onclick="discard_edits('{{id}}' )">
+                        <span class="fa fa-fw fa-times"></span>
+                    </a>
+                    <a title="Save" href="#card-{{js_id}}" onclick="save_edits('{{id}}' )">
+                        <span class="fa fa-fw fa-check"></span>
+                    </a>
+                    <a title="Hide" href="#card-{{js_id}}" onclick="hide_card('{{id}}')">
+                        <span class="fa fa-fw fa-minus-square"></span>
+                    </a>
+                </span>
+            </div>
 
 
+            <div id="card-fields-{{js_id}}">
+            </div>
 
-
-
-
-
-        <!-- Each field in the edit pane -->
-        <script id="editFieldTemplate" type="text/x-nano">
-            <div class="card-field card-field-{js_id}" id="card-field-id-{rand}">
-                <input class="field-key" type="text" value="{key}"/>
-                <textarea class="field-value">{value}</textarea>
-                <a href="#card-{js_id}" onclick="remove_field('card-field-id-{rand}');">
-                    <span class="fa fa-fw fa-times"></span>
+            <div class="card-add-field">
+                <a href="#card-{{js_id}}" onclick="add_field('{{id}}');">
+                    <span class="fa fa-fw fa-plus"></span>
                 </a>
             </div>
         </script>
@@ -126,10 +146,45 @@
 
 
 
+
+
+
+        <!-- Whole bookmarks list -->
+        <script id="bookmarksTemplate" type="text/x-handlebars-template">
+            <ul>
+                {{#each bookmarks}}
+                    <li>
+                        <a title="Bookmark" href="#card-{{js_id}}%>" onclick="toggle_bookmark('{{id}}' )">
+                            <span class="bookmark-marker-{{js_id}} fa fa-fw fa-bookmark"></span>
+                        </a>
+                        <a href="#" onclick="fetch_card('{{id}}');">{{{id}}}</a>
+                    </li>
+                {{/each}}
+            </ul>
+        </script>
+
+
+
+
+
+        <!-- Each field in the edit pane -->
+        <script id="editFieldTemplate" type="text/x-nano">
+<div class="card-field card-field-{{js_id}}" id="card-field-id-{{rand}}">
+                <input class="field-key" type="text" value="{{key}}"/>
+                <textarea class="field-value">{{{value}}}</textarea>
+                <a href="#card-{{js_id}}" onclick="remove_field('card-field-id-{{rand}}');">
+                    <span class="fa fa-fw fa-times"></span>
+                </a>
+            </div>
+        </script>
+
+
+
         <script src="/js/main.js"></script>
         <!-- Focus the search box on load -->
         <script type="text/javascript" language="javascript">
             $(function() {
+              populate_bookmark_list();
               $("#search").focus();
             });
         </script>

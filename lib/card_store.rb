@@ -55,10 +55,19 @@ class CardStore
     return template_id
   end
 
-  # Return the template content for any given ID
+  # Return the template content for any given ID,
+  # merging all higher templates on the way
   def get_template(id)
     id = sanitise_id(id)
-    return load_yaml(get_template_id(id))
+
+    template = {}
+    parts = chunk(id)
+    parts.each_index do |i|
+      id = get_template_id(parts[0..i].join(SEPARATOR))
+      template.merge!(load_yaml(id))
+    end
+
+    return template
   end
 
   # Does an ID exist (raw, not a prefix or rx search)
@@ -113,7 +122,8 @@ class CardStore
 
     self.synchronize do
       # Delete from disk
-      FileUtils.rm(card_filename(id))
+      filename = card_filename(id)
+      FileUtils.rm(filename) if File.exist?(filename)
       dir = card_file_dir(id)
       FileUtils.rm_r(dir) if File.exist?(dir) && File.directory?(dir)
 

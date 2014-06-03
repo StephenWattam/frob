@@ -161,7 +161,7 @@ class Frob < Sinatra::Base
     auth!
 
     id = $store.sanitise_id(params[:id])
-    redirect "/edit/#{id}" unless $store.exist?(id)
+    # json_return({id: id, bookmarked: false, is_template: false, card: nil}) unless $store.exist?(id)
 
     load_card(id)
     # TODO: if request.xhr render partial, else render with layout.
@@ -176,7 +176,9 @@ class Frob < Sinatra::Base
 
     # Parse hash
     hash = params[:fields] || {}
-    return '' unless hash.is_a?(Hash)
+    return json_return('Invalid request', false) unless hash.is_a?(Hash)
+
+    puts "HASH: #{hash}"
 
     # Write to store
     $store.put(id, hash);
@@ -245,7 +247,7 @@ class Frob < Sinatra::Base
     @id          = $store.sanitise_id(id)
     @card        = $store[@id]
     @bookmarked  = ( session[:bookmarks] || [] ).include?(@id)
-    @is_template = @id.to_s[-1] == $store.SEPARATOR
+    @is_template = @id.to_s[-1] == CardStore::SEPARATOR
   end
 
 end
