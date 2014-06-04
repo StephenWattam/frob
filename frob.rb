@@ -1,4 +1,4 @@
-#!/usr/bin/rbx
+#!/usr/bin/ruby
 
 CONFIG_FILE = './frob.yml'
 

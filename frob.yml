@@ -1,8 +1,7 @@
---- 
+---
 :pass_hash: 6702dd12dd86904dda6b7562b0736fb3c4a1271e
 :pass_salt: ER439j0jla3"rjwpo4jiolidj
 :session_timeout: 600
-:store_dir: ./store
-:bookmarks: 
-- thingthatisverylfongfdbuiodfbduigbfudig
+:store_dir: "./store"
+:bookmarks:
 - pass.web.ebay

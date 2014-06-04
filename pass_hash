@@ -1,4 +1,4 @@
-#!/usr/bin/env rbx
+#!/usr/bin/env ruby
 
 unless ARGV.length == 2
   $stderr.puts "USAGE: #{$0} conf.yml password"
