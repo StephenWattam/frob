@@ -39,8 +39,10 @@ aside {
                 font-weight: bold;
 
                 a {
+                    display: inline-block;
                     color: white;
                     text-decoration: none;
+                    max-width: 150px;
                 }
             }
         }
@@ -96,8 +98,11 @@ div#message {
     border: solid 1px @base;
     border-radius: 4px;
     margin: 20px;
+    min-width: 300px;
     
     .card-banner {
+        overflow-y: overlay;
+        overflow-x: hidden;
         border-bottom: solid @base 1px;
         font-weight: bold;
         font-size: larger;
@@ -105,6 +110,7 @@ div#message {
 
         .card-actions {
             float: right;
+            display: inline-block;
             text-align: right;
 
             a {

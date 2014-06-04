@@ -291,7 +291,7 @@ CERT_PATH = './ssl_certs'
 
 webrick_options = {
         :Port               => 5746 ,
-        :Logger             => WEBrick::Log::new($stderr, WEBrick::Log::DEBUG),
+        :Logger             => WEBrick::Log::new($stderr, WEBrick::Log::INFO),
         :SSLEnable          => true,
         :SSLVerifyClient    => OpenSSL::SSL::VERIFY_NONE,
         :SSLCertificate     => OpenSSL::X509::Certificate.new(  

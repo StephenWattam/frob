@@ -192,9 +192,13 @@
 	left: 0;
 	cursor: default;
     padding: 10px 0;
-    width: 200px;
+    min-width: 150px;
+    max-width: 100%;
+    overflow-x: hidden;
     color: white;
     background: white;
+
+    z-index: 100;
 }
 .ui-autocomplete-loading {
     background: #ddd;

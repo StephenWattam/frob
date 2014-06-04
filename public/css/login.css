@@ -28,3 +28,24 @@ span#key {
     line-height: 150px;
     text-align: center;
 }
+
+
+.flash {
+    font-family: sans-serif;
+    position: fixed;
+    border: solid 2px white;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    background: black;
+    color: white;
+    font-weight: bold;
+    padding: 3px 5px;
+    width: 50%;
+    left: 25%;
+    top: 0;
+    text-align: center;
+    box-shadow: 0 0 5px black;
+
+}
+
+

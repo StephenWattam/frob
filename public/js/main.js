@@ -10,11 +10,15 @@ $(document).ready(function(){
   /* Hide working div */
   $( '#working' ).hide();
   $( "#working" ).click(function(){ 
-    $( '#working' ).hide();
+    $(this).hide();
   });
   $( '#message' ).hide();
   $( "#message" ).click(function(){ 
-    $( '#message' ).hide();
+    $(this).hide();
+  });
+
+  $( "#search" ).focus(function(){
+    $(this).val('');
   });
 
   /* Handle drop-down search box. */
