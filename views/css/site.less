@@ -1,6 +1,7 @@
 
 @base: rgb(89, 104, 87);
-@linkbase: @base;
+@warn: rgb(104, 89, 87);
+@linkbase: black;
 
 aside {
 
@@ -58,12 +59,38 @@ div#global-actions {
 }
 
 div#content {
-    
     margin-left: 200px;
-
 }
 
+div#working {
+    position: fixed;
+    right: 0;
+    top: 0;
+    color: black;
+    background: white;
+    box-shadow: 0 0 5px white;
+}
 
+div#message {
+    position: fixed;
+    border: solid 2px white;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    background: @base;
+    color: white;
+    font-weight: bold;
+    padding: 3px 5px;
+    width: 50%;
+    left: 25%;
+    top: 0;
+    text-align: center;
+    box-shadow: 0 0 5px @base;
+
+    &.warning {
+        background: @warn
+    }
+
+}
 
 .card {
     border: solid 1px @base;

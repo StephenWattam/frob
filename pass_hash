@@ -17,5 +17,9 @@ conf = YAML.load(File.read(ARGV[0]))     or fail "Could not load main config"
 salt = conf[:pass_salt]
 hash = Digest::SHA1.hexdigest("#{salt}#{ARGV[1].encode('utf-8')}")
 
-puts hash
+
+conf[:pass_hash] = hash
+File.open(ARGV[0], 'w') do |out|
+  YAML.dump(conf, out)
+end
 

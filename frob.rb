@@ -130,7 +130,7 @@ class Frob < Sinatra::Base
   
   # JSON search API
   get '/search' do
-    auth!
+    json_auth!
 
     # Read search term
     term = params[:term].to_s
@@ -141,13 +141,15 @@ class Frob < Sinatra::Base
 
     # search using regexp
     results = $store.find(params[:term])
+    results.delete(sanitised_input)
+    results.sort!
 
     json_return([sanitised_input] + results)
   end
 
   # Rebuild internal index manually.
   post '/rebuild-index' do
-    auth!
+    json_auth!
 
     # TODO: handle failure.
     $store.rebuild_index
@@ -158,7 +160,7 @@ class Frob < Sinatra::Base
 
   # AJAX partial rendering thing
   get '/get/:id' do
-    auth!
+    json_auth!
 
     id = $store.sanitise_id(params[:id])
     # json_return({id: id, bookmarked: false, is_template: false, card: nil}) unless $store.exist?(id)
@@ -171,7 +173,7 @@ class Frob < Sinatra::Base
 
   # Post to save
   post '/edit/:id' do
-    auth!
+    json_auth!
     id = $store.sanitise_id(params[:id])
 
     # Parse hash
@@ -188,7 +190,7 @@ class Frob < Sinatra::Base
 
   # Delete a card permanently
   post '/delete/:id' do
-    auth!
+    json_auth!
 
     id = $store.sanitise_id(params[:id])
     $store.delete(id)
@@ -198,22 +200,22 @@ class Frob < Sinatra::Base
 
   # Return bookmark list
   get '/bookmarks' do 
-    auth!
+    json_auth!
 
-    json_return(session[:bookmarks] || [])
+    json_return(($conf[:bookmarks] || []).sort)
   end
 
   # Add a bookmark
   post '/toggle-bookmark/:id' do
-    auth!
+    json_auth!
 
     id = $store.sanitise_id(params[:id])
-    session[:bookmarks] ||= []
+    $conf[:bookmarks] ||= []
 
-    if session[:bookmarks].include?(id)
-      session[:bookmarks].delete(id)
+    if $conf[:bookmarks].include?(id)
+      $conf[:bookmarks].delete(id)
     else
-      session[:bookmarks] << id
+      $conf[:bookmarks] << id
     end
    
     json_return(id)
@@ -234,6 +236,10 @@ class Frob < Sinatra::Base
   # Auth helper
   #
 
+  def json_auth!
+    json_return('Unauthed', false) unless session[:authed]
+  end
+
   def auth!
     redirect '/login' unless session[:authed]
   end
@@ -246,9 +252,24 @@ class Frob < Sinatra::Base
   def load_card(id)
     @id          = $store.sanitise_id(id)
     @card        = $store[@id]
-    @bookmarked  = ( session[:bookmarks] || [] ).include?(@id)
+    @bookmarked  = ( $conf[:bookmarks] || [] ).include?(@id)
     @is_template = @id.to_s[-1] == CardStore::SEPARATOR
   end
+
+end
+
+
+
+# =================================================================
+# Write config on shutdown
+at_exit do
+
+  puts 'Writing config file...'
+  config_str = YAML.dump($conf)
+  File.open(CONFIG_FILE, 'w') do |out|
+    out.write(config_str)
+  end
+  puts 'Done'
 
 end
 
@@ -258,11 +279,9 @@ end
 
 
 
-
-
-
-
-
+# =================================================================
+# Webrick HTTPS config.
+#
 require 'sinatra/base'
 require 'webrick'
 require 'webrick/https'

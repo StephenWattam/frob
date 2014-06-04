@@ -7,6 +7,16 @@ var field_template        = Handlebars.compile( $( "#editFieldTemplate" ).html()
 
 $(document).ready(function(){
 
+  /* Hide working div */
+  $( '#working' ).hide();
+  $( "#working" ).click(function(){ 
+    $( '#working' ).hide();
+  });
+  $( '#message' ).hide();
+  $( "#message" ).click(function(){ 
+    $( '#message' ).hide();
+  });
+
   /* Handle drop-down search box. */
   $(function() {
     $( "#search" ).autocomplete({
@@ -15,8 +25,10 @@ $(document).ready(function(){
           var term = request.term;
 
           $.getJSON( "/search", request, function( data, status, xhr ) {
-            // TODO: test data['success'] == true
-            response( data['value'] );
+            if (check_json_response(data))
+              response( data['value'] );
+          }).fail(function(){
+            display_error("Server communication error");
           });
         },
       select: function( event, ui ) {
@@ -33,18 +45,21 @@ $(document).ready(function(){
 // Make a get request, handling the UI and server API
 function get(endpoint, callback){
 
-  // TODO: show activity icon
+  // show activity icon
+  $("#working").show();
 
   $.get( endpoint, function( data ) {
 
-    // TODO: hide activity icon
     data = JSON.parse(data);
-    // TODO: test data['success'] == true and error if not
   
-    callback(data['value']);
+    if(check_json_response(data))
+      callback(data['value']);
+
+    $( '#working' ).hide();
+  }).fail(function(){
+    display_error("Server communication error");
   });
 
-  // TODO: add failure handler that displays an error message
 }
 
 // Make a POST request, handling the UI and server API 
@@ -59,26 +74,63 @@ function post(endpoint, payload, callback){
     payload = {};
   }
 
-  // TODO: show activity icon
+  // show activity icon
+  $("#working").show();
 
   // POST and then un-edit
   $.post( endpoint, payload, function( data ) {
    
-    // TODO: hide activity icon
     data = JSON.parse(data);
-    // TODO: test data['success'] == true, error if not
 
-    callback(data["value"]);
+    if(check_json_response(data))
+      callback(data["value"]);
+
+    $( '#working' ).hide();
+  }).fail(function(){
+    display_error("Server communication error");
   });
 
-  // TODO: add failure handler that displays an error message
 }
+
+
+/* Check a response succeeded.  Returns true or false. */
+function check_json_response(response) {
+  if (response['success'] != true) {
+    display_error(response['value']);
+    return false;
+  }
+  return true;
+}
+
+/* Display an error to the user */
+function display_error(msg) {
+  $("#message").removeClass('message');
+  $("#message").addClass('warning');
+  $("#message").html(msg);
+  $("#message").show();
+}
+
+/* Display a message to the user */
+function display_message(msg, timeout) {
+
+  $("#message").removeClass('warning');
+  $("#message").addClass('message');
+  $("#message").html(msg);
+  $("#message").show();
+
+  if(typeof timeout != "undefined"){
+    setTimeout(function(){
+      $("#message").hide();
+    }, timeout);
+  }
+}
+
 
 
 /* Rebuild the internal index */
 function rebuild_index(){
   post('/rebuild-index', function(msg){
-    alert('' + msg);
+    display_message(msg, 1000);
   });
 }
 
@@ -143,6 +195,14 @@ function partial_view_card(response){
     
     // Add the icon type depending on the template state
     response['fields']        = keys(response['card']);
+
+    // Autolink fields
+    $.each(response['card'], function(index, value){
+      if (typeof value == "string") {
+        console.log(index + ":" + value);
+        response['card'][index] = value.autoLink( {target: '_blank'} );
+      }
+    });
 
     // Render the card frame
     // And the card content

@@ -24,6 +24,7 @@
         <script type="text/javascript" src="/js/jquery-ui-1.10.4.custom.min.js"></script>
         <script type="text/javascript" src="/js/jquery.autogrow-textarea.js"></script>
         <script type="text/javascript" src="/js/handlebars-v1.3.0.js"></script>
+        <script type="text/javascript" src="/js/autolink-min.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -50,6 +51,15 @@
         <% flash.each do |k, v| %>
             <section class="flash <%=h k %>"><%=h v %></section>
         <% end %> 
+
+        <!-- Message and warning box.-->
+        <div id="message">
+        </div>
+
+        <!-- Working spinner -->
+        <div id="working">
+            <span class="fa fa-fw fa-spin fa-cog"></span>
+        </div>
 
         <div id="content">
             <!-- content -->
