@@ -1,5 +1,6 @@
 
 @base: rgb(89, 104, 87);
+@linkbase: @base;
 
 aside {
 
@@ -80,13 +81,53 @@ div#content {
             text-align: right;
 
             a {
-                color: @base;
+                color: @linkbase;
                 text-decoration: none;
 
                 &:active {
                     color: red;
                 }
             }
+        }
+    }
+
+    .card-field {
+        margin: 5px;
+
+        a {
+            color: @linkbase;
+            text-decoration: none;
+        }
+      
+        input {
+            display: inline-block;
+            width: 20%;
+            border: solid 1px #eee;
+            font-size: 15px;
+            padding: 0 2px;
+            line-height: 15px;
+        }
+
+
+        textarea {
+            display: inline-block;
+            width: 70%;
+            padding: 0 7px;
+            border: solid 1px #eee;
+            padding: 0 2px;
+            font-size: 15px;
+            line-height: 15px;
+        }
+    }
+
+    .card-add-field {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+
+        a {
+            color: @linkbase;
+            text-decoration: none;
         }
     }
 
@@ -98,6 +139,27 @@ div#content {
         button {
             border: none;
             background: none;
+        }
+    }
+
+    // Content
+    .fields {
+        .field {
+            margin: 5px;
+
+            font-family: monospace;
+
+            .key {
+                font-size: 120%;
+                font-weight: bold;
+            }
+
+            .value {
+                margin-top: 0.2em;
+                display: inline-block;
+                white-space: pre-wrap;
+                vertical-align: top;
+            }
         }
     }
 }

@@ -5,25 +5,28 @@ var card_view_template    = Handlebars.compile( $("#cardViewTemplate").html() );
 var card_edit_template    = Handlebars.compile( $("#cardEditTemplate").html() );
 var field_template        = Handlebars.compile( $( "#editFieldTemplate" ).html() );
 
+$(document).ready(function(){
 
-/* Handle drop-down search box. */
-$(function() {
-  $( "#search" ).autocomplete({
-    minLength: 1,
-    source: function( request, response ) {
-        var term = request.term;
+  /* Handle drop-down search box. */
+  $(function() {
+    $( "#search" ).autocomplete({
+      minLength: 1,
+      source: function( request, response ) {
+          var term = request.term;
 
-        $.getJSON( "/search", request, function( data, status, xhr ) {
-          // TODO: test data['success'] == true
-          response( data['value'] );
-        });
-      },
-    select: function( event, ui ) {
-        var id = $( "#search" ).val();
-        fetch_card(id);
-        $( "#search" ).val("");
-      }
-    });
+          $.getJSON( "/search", request, function( data, status, xhr ) {
+            // TODO: test data['success'] == true
+            response( data['value'] );
+          });
+        },
+      select: function( event, ui ) {
+          var id = $( "#search" ).val();
+          fetch_card(id);
+          $( "#search" ).val("");
+        }
+      });
+  });
+
 });
 
 
@@ -173,6 +176,17 @@ function add_field(id, key, value) {
   var uuid = ('' + Math.random()).replace(/\./g, '');
 
   $( "#card-fields-" + to_js_id(id) ).append( field_template( {js_id: to_js_id(id), rand: uuid, key: key, value: value} ) );
+
+  // TODO: Enable CodeMirror on the textarea
+  // CodeMirror.fromTextArea( $("#card-field-id-" + uuid + " .field-value").get(0), 
+  //     {
+  //         mode: 'markdown',
+  //         lineNumbers: true,
+  //         viewportMargin: Infinity,
+  //     }
+  // );
+  //
+  $("#card-field-id-" + uuid + " .field-value").autogrow();
 
   // Focus the new key
   $( "#card-field-id-" + uuid + " .field-key" ).focus();

@@ -19,10 +19,11 @@
         <link rel="stylesheet" href="/css/flash.css">
         <!-- todo: print styles -->
 
-        <script src="/js/modernizr-2.6.2.min.js"></script>
-        <script src="/js/jquery-1.10.2.min.js"></script>
-        <script src="/js/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="/js/handlebars-v1.3.0.js"></script>
+        <script type="text/javascript" src="/js/modernizr-2.6.2.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.autogrow-textarea.js"></script>
+        <script type="text/javascript" src="/js/handlebars-v1.3.0.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -101,7 +102,7 @@
             <div class="fields">
                 {{#each card}}
                     <div class="field">
-                        <span class="key">{{{@key}}}</span>: {{{this}}}
+                        <span class="key">{{{@key}}}</span>: <span class="value">{{{this}}}</span>
                     </div>
                 {{/each}}
             </div>
@@ -170,11 +171,11 @@
         <!-- Each field in the edit pane -->
         <script id="editFieldTemplate" type="text/x-nano">
 <div class="card-field card-field-{{js_id}}" id="card-field-id-{{rand}}">
-                <input class="field-key" type="text" value="{{key}}"/>
-                <textarea class="field-value">{{{value}}}</textarea>
                 <a href="#card-{{js_id}}" onclick="remove_field('card-field-id-{{rand}}');">
                     <span class="fa fa-fw fa-times"></span>
                 </a>
+                <input class="field-key" type="text" value="{{key}}"/>
+                <textarea class="field-value">{{{value}}}</textarea>
             </div>
         </script>
 
