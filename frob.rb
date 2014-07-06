@@ -97,6 +97,11 @@ class Frob < Sinatra::Base
     erb :login, :layout => nil
   end
 
+  # Tell the JSON handler that a new login is needed to continue.
+  get '/json_login' do
+    json_return('Unauthed', false) unless session[:authed]
+  end
+
   # Accept login
   post '/login' do
     # Hash in same way as generation tool 
@@ -237,7 +242,7 @@ class Frob < Sinatra::Base
   #
 
   def json_auth!
-    json_return('Unauthed', false) unless session[:authed]
+    redirect '/json_login' unless session[:authed]
   end
 
   def auth!
