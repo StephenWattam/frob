@@ -24,6 +24,7 @@ $(document).ready(function(){
   /* Handle drop-down search box. */
   $(function() {
     $( "#search" ).autocomplete({
+      autoFocus: true,
       minLength: 1,
       source: function( request, response ) {
           var term = request.term;
