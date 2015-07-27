@@ -48,7 +48,7 @@ class Frob < Sinatra::Base
 
   # Session handling
   use Rack::Session::Cookie, 
-    :expire_after => [$conf[:session_timeout].to_i, 60 * 5].min, 
+    :expire_after => [$conf[:session_timeout].to_i, 60 * 5].max, 
     :secret       => 'sTGfereFERha4he8akuresgh8kr3hy8ioz'
 
   # SSL

@@ -1,0 +1,12 @@
+[Unit]
+Description=Secure Password Manager
+
+[Service]
+WorkingDirectory=/srv/frob
+ExecStart=/srv/frob/frob.rb
+Restart=on-abort
+User=wattams
+Group=users
+
+[Install]
+WantedBy=multi-user.target
