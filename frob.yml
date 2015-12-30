@@ -1,7 +1,17 @@
 ---
 :pass_hash: 6702dd12dd86904dda6b7562b0736fb3c4a1271e
 :pass_salt: ER439j0jla3"rjwpo4jiolidj
-:session_timeout: 600
+:session_timeout: 604800
 :store_dir: "./store"
 :bookmarks:
 - pass.web.ebay
+- thing.thing2
+- thing
+- pass.web.amazon
+- pass.steam
+- pass.web.fark
+- pass.web.datasift
+- pass.web.godaddy
+- pass.web.delicious
+- pass.web.bhf
+- pass.web.argos

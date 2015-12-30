@@ -34,6 +34,7 @@
         <aside>
 
             <div id="global-actions">
+                <a href="#" onclick="go();" title="Go"><span class="fa fa-fw fa-arrow-right"></span></a>
                 <a href="#" onclick="clear_all();" title="Clear"><span class="fa fa-fw fa-minus-square"></span></a>
                 <a href="#" onclick="rebuild_index();" title="re-index"><span class="fa fa-fw fa-refresh"></span></a>
                 <a href="/logout" title="log out"><span class="fa fa-fw fa-lock"></span></a>
@@ -180,7 +181,7 @@
 
         <!-- Each field in the edit pane -->
         <script id="editFieldTemplate" type="text/x-nano">
-<div class="card-field card-field-{{js_id}}" id="card-field-id-{{rand}}">
+            <div class="card-field card-field-{{js_id}}" id="card-field-id-{{rand}}">
                 <a href="#card-{{js_id}}" onclick="remove_field('card-field-id-{{rand}}');">
                     <span class="fa fa-fw fa-times"></span>
                 </a>

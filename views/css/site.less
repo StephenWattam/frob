@@ -2,8 +2,11 @@
 @base: rgb(89, 104, 87);
 @warn: rgb(104, 89, 87);
 @linkbase: black;
+@phonewidth: 800px;
 
 aside {
+
+
 
     width: 200px;
     background: @base;
@@ -12,6 +15,14 @@ aside {
     overflow-y: auto;
     overflow-x: hidden;
     height: 100%;
+    box-shadow: 0 0 3px #555;
+
+    // Phone display mode
+    @media (max-width: @phonewidth) {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
 
 
     #search {
@@ -20,6 +31,11 @@ aside {
         font-weight: bold;
         border: none;
         margin: 0;
+        
+        @media (max-width: @phonewidth) {
+            width: 100%;
+            min-height: 30px;
+        }
     }
 
 
@@ -30,6 +46,10 @@ aside {
         ul {
             padding: 0;
             margin: 0;
+        
+            @media (max-width: @phonewidth) {
+                max-height: 150px;
+            }
 
             li {
                 
@@ -37,12 +57,21 @@ aside {
                 margin: 0;
                 padding: 2px 5px;
                 font-weight: bold;
+                    
+                @media (max-width: @phonewidth) {
+                    display: inline-block;
+                    max-width: 48%;
+                }
 
                 a {
                     display: inline-block;
                     color: white;
                     text-decoration: none;
                     max-width: 150px;
+                    
+                    @media (max-width: @phonewidth) {
+                        min-height: 30px;
+                    }
                 }
             }
         }
@@ -57,11 +86,20 @@ div#global-actions {
 
     a .fa {
         color: white;
+
+        @media (max-width: @phonewidth) {
+            padding: 10px;
+        }
+
     }
 }
 
 div#content {
     margin-left: 200px;
+    
+    @media (max-width: @phonewidth) {
+        margin-left: 0;
+    }
 }
 
 div#working {
@@ -99,6 +137,7 @@ div#message {
     border-radius: 4px;
     margin: 20px;
     min-width: 300px;
+    box-shadow: 2px 2px 3px #555;
     
     .card-banner {
         overflow-y: overlay;
@@ -117,6 +156,10 @@ div#message {
                 color: @linkbase;
                 text-decoration: none;
 
+                @media (max-width: @phonewidth) {
+                    padding: 10px;
+                }
+
                 &:active {
                     color: red;
                 }
@@ -126,6 +169,7 @@ div#message {
 
     .card-field {
         margin: 5px;
+
 
         a {
             color: @linkbase;
@@ -153,6 +197,8 @@ div#message {
         }
     }
 
+    // Button to add a field at the bottom of the
+    // card
     .card-add-field {
         width: 100%;
         text-align: center;
@@ -164,6 +210,7 @@ div#message {
         }
     }
 
+    // Buttons at the top of the card
     .card-edit-buttons {
 
         padding: 5px;
@@ -179,6 +226,10 @@ div#message {
     .fields {
         .field {
             margin: 5px;
+
+            @media (max-width: @phonewidth) {
+                min-height: 30px;
+            }
 
             font-family: monospace;
 

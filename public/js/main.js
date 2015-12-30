@@ -17,9 +17,9 @@ $(document).ready(function(){
     $(this).hide();
   });
 
-  $( "#search" ).focus(function(){
+  /* $( "#search" ).focus(function(){
     $(this).val('');
-  });
+  }); */
 
   /* Handle drop-down search box. */
   $(function() {
@@ -37,15 +37,21 @@ $(document).ready(function(){
           });
         },
       select: function( event, ui ) {
+          console.log(event);
           var id = $( "#search" ).val();
           fetch_card(id);
-          $( "#search" ).val("");
         }
       });
   });
 
 });
 
+
+// Read from the search box and retrieve
+function go(){
+  var id = $( "#search" ).val();
+  fetch_card(id);
+}
 
 // Make a get request, handling the UI and server API
 function get(endpoint, callback){
@@ -204,7 +210,7 @@ function partial_view_card(response){
     // Autolink fields
     $.each(response['card'], function(index, value){
       if (typeof value == "string") {
-        console.log(index + ":" + value);
+        // console.log(index + ":" + value);
         response['card'][index] = value.autoLink( {target: '_blank'} );
       }
     });
@@ -213,6 +219,11 @@ function partial_view_card(response){
     // And the card content
     $( "#card-" + response['js_id'] + " .card-content" ).html( card_view_template(response) );
 
+    // Onclick of any key, copy the value to the clipboard
+    $( ".key" ).click( function(){
+      var value = $(this).siblings(".value")[0];
+      select_text(value);
+    });
 }
 
 
@@ -441,7 +452,24 @@ function keys(obj) {
 }
 
 
-
+// Many thanks to Jason,
+// http://stackoverflow.com/questions/985272/selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
+function select_text(element) {
+    var doc = document
+        , range, selection
+    ;    
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();        
+        range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
 
 
 
